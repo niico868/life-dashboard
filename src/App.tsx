@@ -7,6 +7,7 @@ import { Login } from './pages/Login'
 import { Placeholder } from './pages/Placeholder'
 import { Work } from './pages/Work'
 import { Home } from './pages/Home'
+import { Habits } from './pages/Habits'
 import { Onboarding } from './pages/Onboarding'
 import { Report } from './pages/Report'
 import { WorkProvider } from './work/WorkProvider'
@@ -26,7 +27,7 @@ function Shell() {
             <Routes location={location}>
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/habits" element={<Placeholder title="Habits" note="Onboarding and habits are coming up next (Phase 1)." />} />
+              <Route path="/habits" element={<Habits />} />
               <Route path="/work" element={<Work />} />
               <Route path="/report" element={<Report />} />
               <Route path="*" element={<Placeholder title="Lost?" note="That page doesn't exist." />} />

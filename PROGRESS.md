@@ -1,5 +1,20 @@
 # Progress
 
+## Session 1c (18 Nov 2026): Habits screen
+
+### What got built
+- **Habits (`/habits`):** today's habits, chores and night routine steps, grouped 🌅 Morning / ☀️ Any time / 🌙 Night. Only the ones scheduled for today's weekday appear.
+- **Tick-offs:** tap the hand-drawn circle and the check draws itself in, with a confetti pop and a little phone buzz. Multi-count habits (e.g. Workout 2×/day) fill a pip per tap. Tapping a finished one clears it (undo).
+- **Streaks 🔥:** scheduled days in a row fully done. An unfinished *today* doesn't break your streak until the day is over.
+- **Discipline score:** % of what was scheduled that got done over the last 14 days (partial credit for multi-count). Shown overall (the ring, top right) and per standard (bars at the bottom).
+- A full-day progress bar, plus a "Every box ticked. That's him. 🏆" banner when you clear the day.
+- Dates use your local day (T&T), not UTC, so a 11pm tick lands on the right day.
+
+### What's next
+- Chore levelling (offer a bigger chore after 7 days in a row).
+- Nightly routine checker + evening notification.
+
+
 ## Session 1b (18 Nov 2026): Phase 1 onboarding
 
 ### What got built
