@@ -9,6 +9,7 @@ import { Work } from './pages/Work'
 import { Home } from './pages/Home'
 import { Habits } from './pages/Habits'
 import { Night } from './pages/Night'
+import { Calendar } from './pages/Calendar'
 import { NightProvider } from './night/NightProvider'
 import { NightBanner } from './night/NightBanner'
 import { Onboarding } from './pages/Onboarding'
@@ -34,6 +35,7 @@ function Shell() {
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/habits" element={<Habits />} />
               <Route path="/night" element={<Night />} />
+              <Route path="/calendar" element={<Calendar />} />
               <Route path="/work" element={<Work />} />
               <Route path="/report" element={<Report />} />
               <Route path="*" element={<Placeholder title="Lost?" note="That page doesn't exist." />} />

@@ -1,5 +1,22 @@
 # Progress
 
+## Session 1f (18 Nov 2026): Phase 3, calendar + planning
+
+### What got built
+- **Plan tab (`/calendar`):** a Monday-start week strip (coloured dots per event), and for the chosen day a **free/busy bar** (7am–10pm) plus a list of free gaps of 30+ min. Event cards show time, type, place, prep progress and rating.
+- **Events:** types 🤝 Client / 🗣️ Meeting / 🎉 Social / 🛒 Errand / 📌 Other. Tap an event to edit or delete it.
+- **Prep checklists from templates:** picking a type fills in a starter list with due times. A client onboarding gets talking points (2 days before), sheet work (1 day), confirm with client (1 day), outfit (night before), charge phone + laptop (3h), leave on time (45 min). Everything is editable.
+- **🧳 Prep due:** a card at the top with every unticked prep item due in the next 48h (overdue in red). Tick them off right there.
+- **"How did it go?":** after an event ends, rate it 1–5 ⭐ with a note. **How things went** shows your 30-day average, overall and per type.
+- New tables: `life.events`, `life.event_prep`.
+
+### What's next
+- Phase 4: the live dashboard home.
+
+### Test
+- Plan → + event → pick Client → check the template fills in → save. Add another event the same day and check the free/busy bar.
+
+
 ## Session 1e (18 Nov 2026): Chore levelling + push notifications
 
 ### What got built

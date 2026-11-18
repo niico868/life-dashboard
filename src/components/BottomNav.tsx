@@ -5,6 +5,7 @@ const tabs = [
   { to: '/', label: 'Home', icon: 'M4 11l8-7 8 7v9H4z' },
   { to: '/habits', label: 'Habits', icon: 'M5 12l4 4 10-10' },
   { to: '/work', label: 'Work', icon: 'M12 7v5l3 2M12 3a9 9 0 110 18 9 9 0 010-18z' },
+  { to: '/calendar', label: 'Plan', icon: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4' },
   { to: '/report', label: 'Report', icon: 'M5 20V10M12 20V4M19 20v-7' },
 ]
 
@@ -14,7 +15,7 @@ export function BottomNav() {
       <ul className="mx-auto flex max-w-md justify-around">
         {tabs.map((t) => (
           <li key={t.to}>
-            <NavLink to={t.to} end={t.to === '/'} className="relative flex flex-col items-center px-4 py-2">
+            <NavLink to={t.to} end={t.to === '/'} className="relative flex flex-col items-center px-3 py-2">
               {({ isActive }) => (
                 <>
                   {isActive && (
