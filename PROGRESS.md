@@ -1,5 +1,20 @@
 # Progress
 
+## Session 1g (18 Nov 2026): Phase 4, the live dashboard home
+
+### What got built
+- **Home (`/`)** pulls everything together:
+  - A greeting that changes with the time of day.
+  - **Alert ticker:** a scrolling strip of overdue/upcoming prep, night routine status, habits left, the running work session, your best 🔥 streak, and the next appointment. It shows a static list if the phone has "reduce motion" on.
+  - **Four live tiles:** Habits today (filling ring), Discipline (counts up), Work today (live while a session runs, with a pulse dot), Night routine (turns dark navy when overdue). Tap any tile to jump to its screen.
+  - **Next appointment** with a countdown, prep progress bar and the next prep item (red if overdue).
+  - **Up next:** your next 3 unticked habits, tickable right from Home.
+  - **"Remember who you're becoming ▾"** opens the "This is him" card.
+- `useWorkToday()` hook shared by Home and Work.
+
+**All four phases from CLAUDE.md are now built.** "Later ideas" (rooster sound, gamification, desktop layout) are still to do.
+
+
 ## Session 1f (18 Nov 2026): Phase 3, calendar + planning
 
 ### What got built

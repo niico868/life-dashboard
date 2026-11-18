@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { life } from '../lib/supabase'
-import { dayBounds, fmtClock, fmtDuration, fmtTime } from '../lib/time'
+import { fmtClock, fmtDuration, fmtTime } from '../lib/time'
 import { Sketchy } from '../components/Sketchy'
 import { SketchButton } from '../components/SketchButton'
 import { useWork } from '../work/WorkProvider'
@@ -9,23 +8,15 @@ import { TimerFace } from '../work/TimerFace'
 import { CheckIn } from '../work/CheckIn'
 import { pipSupported, useOpenPip } from '../work/FloatingTimer'
 import type { WorkSession } from '../work/types'
+import { useWorkToday } from '../work/useWorkToday'
 
 export function Work() {
   const w = useWork()
-  const [bankedToday, setBankedToday] = useState(0)
   const [ending, setEnding] = useState(false)
   const [justDone, setJustDone] = useState<WorkSession | null>(null)
   const [refresh, setRefresh] = useState(0)
 
-  // Time from sessions already finished today.
-  useEffect(() => {
-    const { start, end } = dayBounds()
-    life().from('work_sessions').select('active_seconds').eq('status', 'ended')
-      .gte('started_at', start).lt('started_at', end)
-      .then(({ data }) => setBankedToday((data ?? []).reduce((t, r) => t + r.active_seconds, 0)))
-  }, [refresh])
-
-  const today = bankedToday + (w.session ? w.elapsed : 0)
+  const today = useWorkToday(refresh)
 
   if (w.loading) return <p className="hand text-xl">Loading…</p>
 
