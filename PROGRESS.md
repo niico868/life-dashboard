@@ -1,5 +1,23 @@
 # Progress
 
+## Session 1b (18 Nov 2026): Phase 1 onboarding
+
+### What got built
+- **Onboarding (`/onboarding`):** a warm, step-by-step flow. Intro → *Where you are now* → *Visualise him* (+ why) → *Standards*, area by area (💪 body, 🥗 food, 🧠 mind, 💰 money, 🏠 home, 🚬 vices, 👔 style, 💻 work, ❤️ relationships). Each line is a ✓ do / ✗ don't / ~ limit (guessed from your wording, tap to switch). Tap the example chips to add them fast.
+- **Turn it into action:** smart templates suggest a habit or chore for each standard (free, no AI). Rename, switch habit/chore, set morning/night/any time, and change ×/day.
+- **Night routine builder:** your "can't sleep until it's done" list, in order, with quick-add presets.
+- **"This is him." card:** shown at the end and on the Home screen, with a "redo / edit him" link.
+- **Redo = edit in place:** your saved answers load pre-filled. Anything you remove is switched off (`active = false`), never deleted, so streak history stays safe.
+- Saves to `life.vision`, `life.standards` and `life.habits` (night steps as `kind = routine_step`, `routine = night`).
+
+### What's next
+- Habits screen: today's tick-offs with animations, streaks and discipline scores.
+- Then chore levelling and the nightly routine checker.
+
+### Test when back at the Chromebook
+- Home → "Start onboarding" → go through every step → "Lock it in" → you should land on Home with your card.
+- Tap "redo / edit him" and check that everything comes back pre-filled.
+
 ## Session 1 (18 Nov 2026): Foundation + Phase 2 (work timer)
 
 ### What got built

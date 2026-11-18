@@ -6,6 +6,8 @@ import { BottomNav } from './components/BottomNav'
 import { Login } from './pages/Login'
 import { Placeholder } from './pages/Placeholder'
 import { Work } from './pages/Work'
+import { Home } from './pages/Home'
+import { Onboarding } from './pages/Onboarding'
 import { Report } from './pages/Report'
 import { WorkProvider } from './work/WorkProvider'
 import { FloatingTimer } from './work/FloatingTimer'
@@ -22,9 +24,8 @@ function Shell() {
         <AnimatePresence mode="wait">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
             <Routes location={location}>
-              <Route path="/" element={
-                <Placeholder title="Hey Nico 👋" note="Your dashboard home lands in Phase 4. For now, head to Work to run a session." />
-              } />
+              <Route path="/" element={<Home />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/habits" element={<Placeholder title="Habits" note="Onboarding and habits are coming up next (Phase 1)." />} />
               <Route path="/work" element={<Work />} />
               <Route path="/report" element={<Report />} />
