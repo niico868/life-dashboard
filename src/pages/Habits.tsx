@@ -5,6 +5,8 @@ import { Sketchy } from '../components/Sketchy'
 import { KIND_META, areaOf } from '../onboarding/areas'
 import { HABITS_CHANGED, announceHabitsChanged } from '../night/NightProvider'
 import { nightDate } from '../night/settings'
+import { LevelUpCard } from '../habits/LevelUpCard'
+import { readyToLevel } from '../habits/levelling'
 import {
   SCORE_DAYS, dayKey, discipline, isDone, isScheduled, loadHabits, setCount, streak,
   type Habit, type LogMap, type Standard,
@@ -23,6 +25,7 @@ export function Habits() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const [reload, setReload] = useState(0)
   useEffect(() => {
     const load = () => loadHabits()
       .then((r) => { setHabits(r.habits); setStandards(r.standards); setLogs(r.logs) })
@@ -31,7 +34,7 @@ export function Habits() {
     void load()
     window.addEventListener(HABITS_CHANGED, load)
     return () => window.removeEventListener(HABITS_CHANGED, load)
-  }, [])
+  }, [reload])
 
   const today = useMemo(() => new Date(), [])
   // Night routine steps belong to "tonight", which runs until 4am.
@@ -101,6 +104,12 @@ export function Habits() {
             </Sketchy>
           </motion.div>
         )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {readyToLevel(habits, logs, today).slice(0, 1).map((h) => (
+          <LevelUpCard key={h.id} h={h} streakDays={streak(logs, h, today)} onDone={() => { setReload((r) => r + 1); announceHabitsChanged() }} />
+        ))}
       </AnimatePresence>
 
       {SECTIONS.map((sec) => {
