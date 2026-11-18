@@ -8,6 +8,9 @@ import { Placeholder } from './pages/Placeholder'
 import { Work } from './pages/Work'
 import { Home } from './pages/Home'
 import { Habits } from './pages/Habits'
+import { Night } from './pages/Night'
+import { NightProvider } from './night/NightProvider'
+import { NightBanner } from './night/NightBanner'
 import { Onboarding } from './pages/Onboarding'
 import { Report } from './pages/Report'
 import { WorkProvider } from './work/WorkProvider'
@@ -21,6 +24,8 @@ function Shell() {
 
   return (
     <WorkProvider>
+      <NightProvider>
+      <NightBanner />
       <main className="mx-auto max-w-md px-4 pb-28 pt-6">
         <AnimatePresence mode="wait">
           <motion.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
@@ -28,6 +33,7 @@ function Shell() {
               <Route path="/" element={<Home />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/habits" element={<Habits />} />
+              <Route path="/night" element={<Night />} />
               <Route path="/work" element={<Work />} />
               <Route path="/report" element={<Report />} />
               <Route path="*" element={<Placeholder title="Lost?" note="That page doesn't exist." />} />
@@ -38,6 +44,7 @@ function Shell() {
       </main>
       <BottomNav />
       <FloatingTimer />
+      </NightProvider>
     </WorkProvider>
   )
 }

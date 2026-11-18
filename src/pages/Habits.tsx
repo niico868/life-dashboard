@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from 'framer-motion'
 import { Sketchy } from '../components/Sketchy'
 import { KIND_META, areaOf } from '../onboarding/areas'
+import { HABITS_CHANGED, announceHabitsChanged } from '../night/NightProvider'
+import { nightDate } from '../night/settings'
 import {
   SCORE_DAYS, dayKey, discipline, isDone, isScheduled, loadHabits, setCount, streak,
   type Habit, type LogMap, type Standard,
@@ -22,20 +24,25 @@ export function Habits() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    loadHabits()
+    const load = () => loadHabits()
       .then((r) => { setHabits(r.habits); setStandards(r.standards); setLogs(r.logs) })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
+    void load()
+    window.addEventListener(HABITS_CHANGED, load)
+    return () => window.removeEventListener(HABITS_CHANGED, load)
   }, [])
 
   const today = useMemo(() => new Date(), [])
-  const todayKey = dayKey(today)
-  const due = habits.filter((h) => isScheduled(h, today))
-  const doneCount = due.filter((h) => isDone(logs, h, today)).length
+  // Night routine steps belong to "tonight", which runs until 4am.
+  const dateFor = (h: Habit) => (h.routine === 'night' ? nightDate(today) : today)
+  const due = habits.filter((h) => isScheduled(h, dateFor(h)))
+  const doneCount = due.filter((h) => isDone(logs, h, dateFor(h))).length
   const overall = discipline(logs, habits, today)
 
   /** Tap: +1 until full, then a tap clears it (undo). Optimistic, rolls back on error. */
   async function tap(h: Habit) {
+    const todayKey = dayKey(dateFor(h))
     const cur = logs.get(h.id)?.get(todayKey) ?? 0
     const nextCount = cur >= h.times_per_day ? 0 : cur + 1
     const write = (n: number) => setLogs((prev) => {
@@ -47,7 +54,7 @@ export function Habits() {
     })
     write(nextCount)
     if (nextCount >= h.times_per_day) navigator.vibrate?.(18)
-    try { await setCount(h.id, todayKey, nextCount) } catch (e) { write(cur); setError((e as Error).message) }
+    try { await setCount(h.id, todayKey, nextCount); announceHabitsChanged() } catch (e) { write(cur); setError((e as Error).message) }
   }
 
   if (loading) return <p className="hand text-2xl">Loading your day…</p>
@@ -99,15 +106,16 @@ export function Habits() {
       {SECTIONS.map((sec) => {
         const items = due.filter((h) => h.routine === sec.id)
         if (!items.length) return null
-        const secDone = items.filter((h) => isDone(logs, h, today)).length
+        const secDone = items.filter((h) => isDone(logs, h, dateFor(h))).length
         return (
           <section key={sec.id}>
             <h2 className="mb-2 flex items-baseline justify-between text-2xl font-bold">
-              {sec.title}<span className="hand text-base font-normal text-ink-soft">{secDone}/{items.length}</span>
+              {sec.id === 'night' ? <Link to="/night">{sec.title} ↗</Link> : sec.title}
+              <span className="hand text-base font-normal text-ink-soft">{secDone}/{items.length}</span>
             </h2>
             <ul className="flex flex-col gap-2">
               {items.map((h) => (
-                <HabitTick key={h.id} h={h} count={logs.get(h.id)?.get(todayKey) ?? 0} streakDays={streak(logs, h, today)} onTap={() => void tap(h)} />
+                <HabitTick key={h.id} h={h} count={logs.get(h.id)?.get(dayKey(dateFor(h))) ?? 0} streakDays={streak(logs, h, dateFor(h))} onTap={() => void tap(h)} />
               ))}
             </ul>
           </section>

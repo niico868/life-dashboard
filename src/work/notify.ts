@@ -1,10 +1,17 @@
 /**
- * Notifications + sounds for the work timer.
- * Sounds go through playAlert(), the hook for custom alert sounds later
- * (e.g. the rooster alarm). Drop an audio URL into ALERT_SOUNDS to swap one in.
+ * Notifications + sounds (work timer and night routine).
+ * Every sound goes through playAlert(): the hook for custom alert sounds.
+ * Drop an audio file in /public and map it here to swap one in, e.g.
+ *   night: '/sounds/rooster.mp3'
  */
-export type AlertKind = 'checkin' | 'pomodoro'
+export type AlertKind = 'checkin' | 'pomodoro' | 'night'
 export const ALERT_SOUNDS: Partial<Record<AlertKind, string>> = {}
+
+const CHIMES: Record<AlertKind, number[]> = {
+  checkin: [523, 784],
+  pomodoro: [660, 880, 990],
+  night: [880, 660, 880, 660, 523], // a bit more insistent
+}
 
 export function playAlert(kind: AlertKind) {
   const url = ALERT_SOUNDS[kind]
@@ -12,7 +19,7 @@ export function playAlert(kind: AlertKind) {
   // Default: a soft two-note chime made with Web Audio, no file needed.
   try {
     const ctx = new AudioContext()
-    const notes = kind === 'pomodoro' ? [660, 880, 990] : [523, 784]
+    const notes = CHIMES[kind]
     notes.forEach((f, i) => {
       const o = ctx.createOscillator()
       const g = ctx.createGain()
@@ -51,9 +58,9 @@ export async function showCheckinNotification(sessionId: string) {
   else new Notification('Quick check-in ✏️', options)
 }
 
-export async function showSimpleNotification(title: string, body: string) {
+export async function showSimpleNotification(title: string, body: string, tag = 'pomodoro') {
   if (!('Notification' in window) || Notification.permission !== 'granted') return
   const reg = await navigator.serviceWorker?.getRegistration()
-  if (reg) await reg.showNotification(title, { body, icon: '/icon.svg', tag: 'pomodoro' })
+  if (reg) await reg.showNotification(title, { body, icon: '/icon.svg', tag, data: { url: tag === 'night' ? '/night' : '/work' } })
   else new Notification(title, { body })
 }

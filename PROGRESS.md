@@ -1,5 +1,19 @@
 # Progress
 
+## Session 1d (18 Nov 2026): Nightly routine checker
+
+### What got built
+- **Night screen (`/night`):** a dark, starry evening view of your night routine. Tap to tick. Until the reminder time it says "N to go". After it, the unticked steps shake and it says "No sleep until it's done 😤". When it's all done: 🌕 "Goodnight, you earned it."
+- **The nag:** at your reminder time (default 9:30pm) you get a chime and a notification, then again every 15 min (changeable) until every step is ticked. The messages get firmer each time.
+- **Ticker banner:** while the routine is overdue, a scrolling 🌙 banner runs across the top of every other screen, linking to `/night`.
+- **"Tonight" runs until 4am:** brushing your teeth at 12:30am still counts for last night.
+- **Settings:** on the Night screen, tap ⏰ to set the time and nag interval or switch it off. Saved in the new `life.user_settings` table, so it follows you across devices.
+- **Rooster hook:** in `src/work/notify.ts`, set `ALERT_SOUNDS.night = '/sounds/rooster.mp3'` and drop the file in `public/sounds/`.
+
+### Limitation
+Reminders fire only while the app is open or in the background (or with the floating timer up). Alerts with the app fully closed need Web Push from a server (Supabase Edge Function + cron, free tier). Not built yet.
+
+
 ## Session 1c (18 Nov 2026): Habits screen
 
 ### What got built
