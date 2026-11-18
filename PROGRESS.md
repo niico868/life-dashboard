@@ -1,5 +1,18 @@
 # Progress
 
+## Session 1e (18 Nov 2026): Chore levelling + push notifications
+
+### What got built
+- **Chore levelling:** after 7 days in a row on a chore, a 🆙 card on Habits offers a bigger version (e.g. "Make the bed" → "Make the bed + clear the nightstand", "10 minutes" → "20 minutes"). You can edit the suggestion. Level up retires the old chore and starts the new one at level + 1 (linked by `levelled_from`, so history stays). "Not yet" snoozes the offer for a week. **Phase 1 is now complete.**
+- **Real push notifications (night routine):** the `night-nag` Supabase Edge Function runs every 5 minutes (pg_cron). If your routine is past reminder time with steps left, it pushes to your phone even when the app is closed. Turn it on per device: Night → ⏰ → "Push to this device".
+- New: `life.push_subscriptions`; `timezone` + `last_night_push_at` on `life.user_settings`; `service_role` access to `life` (the server needed it).
+
+### Nico to-do: finish push setup (one-time)
+1. On the Chromebook, run `npx web-push generate-vapid-keys`. You get a Public Key and a Private Key.
+2. Paste the **public** key into `.env.local` as `VITE_VAPID_PUBLIC_KEY=...` (and in Cloudflare Pages env vars when deployed). It is safe to share.
+3. Store both keys as Edge Function secrets `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY`: https://supabase.com/dashboard/project/kbghhdudnnyawbxfgdgi/functions/secrets. **Never** put the private key in the repo or the chat.
+
+
 ## Session 1d (18 Nov 2026): Nightly routine checker
 
 ### What got built

@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNight } from '../night/NightProvider'
 import { reminderAt } from '../night/settings'
 import { askNotificationPermission } from '../work/notify'
+import { disablePush, enablePush, isPushOn, pushAvailable } from '../night/push'
 
 const STARS = Array.from({ length: 22 }, (_, i) => ({
   left: (i * 47) % 100, top: (i * 29) % 60, size: 2 + (i % 3), delay: (i % 7) * 0.4,
@@ -13,6 +14,13 @@ const STARS = Array.from({ length: 22 }, (_, i) => ({
 export function Night() {
   const { steps, done, nagging, loaded, toggle, settings, updateSettings } = useNight()
   const [showSettings, setShowSettings] = useState(false)
+  const [push, setPush] = useState(false)
+  const [pushMsg, setPushMsg] = useState('')
+  useEffect(() => { isPushOn().then(setPush).catch(() => {}) }, [])
+  const togglePush = async (on: boolean) => {
+    setPushMsg('')
+    try { if (on) await enablePush(); else await disablePush(); setPush(on) } catch (e) { setPushMsg((e as Error).message) }
+  }
   const left = steps.filter((s) => !done.has(s.id)).length
   const allDone = steps.length > 0 && left === 0
   const at = reminderAt(settings)
@@ -99,7 +107,14 @@ export function Night() {
                     {[5, 10, 15, 30, 60].map((m) => <option key={m} value={m} className="text-ink">{m} min</option>)}
                   </select>
                 </label>
-                <p className="text-xs text-[#f6efe1]/60">Reminders fire while the app is open or running in the background. A rooster alarm is coming later.</p>
+                {pushAvailable() && (
+                  <label className="flex items-center justify-between gap-3">
+                    <span>Push to this device <span className="block text-xs text-[#f6efe1]/60">works even when the app is closed</span></span>
+                    <input type="checkbox" className="h-5 w-5 accent-[#f2cc8f]" checked={push} onChange={(e) => void togglePush(e.target.checked)} />
+                  </label>
+                )}
+                {pushMsg && <p className="text-xs text-clay">{pushMsg}</p>}
+                <p className="text-xs text-[#f6efe1]/60">In-app reminders fire while the app is open. Turn on push for each device you want nagged when it's closed. A rooster alarm is coming later.</p>
               </div>
             </motion.div>
           )}

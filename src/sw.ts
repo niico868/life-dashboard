@@ -8,6 +8,14 @@ precacheAndRoute(self.__WB_MANIFEST)
 // Offline shell: every navigation gets index.html.
 registerRoute(new NavigationRoute(createHandlerBoundToURL('/index.html')))
 
+// Pushes from the night-nag edge function (arrive even when the app is closed).
+self.addEventListener('push', (event) => {
+  const d = event.data?.json() ?? {}
+  event.waitUntil(self.registration.showNotification(d.title ?? 'Life Dashboard', {
+    body: d.body, tag: d.tag ?? 'push', icon: '/icon.svg', data: { url: d.url ?? '/' }, requireInteraction: true,
+  }))
+})
+
 self.addEventListener('message', (e) => { if (e.data === 'SKIP_WAITING') self.skipWaiting() })
 
 // Check-in notification replies → hand to the open app (it holds the login session).
