@@ -54,6 +54,8 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 export function suggestHabits(s: StandardDraft): HabitDraft[] {
   const text = s.statement.toLowerCase().trim()
   if (!text) return []
+  // Beliefs are covered by the morning affirmation, not separate habits.
+  if (s.area === 'beliefs') return []
   const base = { key: newKey(), standardKey: s.key, routine: 'anytime' as Routine, times_per_day: 1 }
 
   if (s.kind === 'dont') {

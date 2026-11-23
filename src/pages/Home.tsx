@@ -11,6 +11,8 @@ import { nightDate, reminderAt } from '../night/settings'
 import { useWork } from '../work/WorkProvider'
 import { useWorkToday } from '../work/useWorkToday'
 import { KINDS, dueAt, loadEvents, type EventWithPrep } from '../calendar/data'
+import { AffirmationSheet } from '../fuel/AffirmationSheet'
+import { loadFuel, takeawayOfDay } from '../fuel/data'
 import { fmtClock, fmtDuration, fmtTime } from '../lib/time'
 
 /** Ticks every `ms` so countdowns and greetings stay live. */
@@ -34,6 +36,9 @@ export function Home() {
   const [logs, setLogs] = useState<LogMap>(new Map())
   const [events, setEvents] = useState<EventWithPrep[]>([])
   const [showHim, setShowHim] = useState(false)
+  const [affirm, setAffirm] = useState<Habit | null>(null)
+  const [fuelLine, setFuelLine] = useState<string | null>(null)
+  useEffect(() => { loadFuel().then((f) => setFuelLine(takeawayOfDay(f))).catch(() => {}) }, [])
   const work = useWork()
   const workToday = useWorkToday()
   const night = useNight()
@@ -84,13 +89,15 @@ export function Home() {
     else if (dayHabits.length) a.push('🏆 Every habit ticked today')
     if (work.session?.status === 'running') a.push(`⏱ Working on ${work.session.title ?? 'something'}: ${fmtClock(work.elapsed)}`)
     if (bestStreak) a.push(`🔥 ${bestStreak.n} days straight: ${bestStreak.h.name}`)
+    if (fuelLine) a.push(`🔥 ${fuelLine}`)
     if (nextEvent) a.push(`📅 Next: ${nextEvent.title} ${relTime(new Date(nextEvent.starts_at), now)}`)
     return a
-  }, [events, night, nightLeft, dayHabits.length, habitsDone, work.session, work.elapsed, bestStreak, nextEvent, now])
+  }, [events, night, nightLeft, dayHabits.length, habitsDone, work.session, work.elapsed, bestStreak, nextEvent, now, fuelLine])
 
-  async function quickTick(h: Habit) {
+  async function quickTick(h: Habit, confirmed = false) {
     const key = dayKey(dateFor(h))
     const cur = logs.get(h.id)?.get(key) ?? 0
+    if (h.special === 'affirmation' && !confirmed) return setAffirm(h)
     const next = Math.min(cur + 1, h.times_per_day)
     setLogs((prev) => { const m = new Map(prev); const inner = new Map(m.get(h.id) ?? []); inner.set(key, next); m.set(h.id, inner); return m })
     navigator.vibrate?.(15)
@@ -190,11 +197,18 @@ export function Home() {
           {showHim && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
               <div className="pt-3"><HimCard draft={draft} /></div>
-              <Link to="/onboarding" className="mt-2 block text-center text-sm underline">redo / edit him</Link>
+              <div className="mt-2 flex justify-center gap-4 text-sm">
+                <Link to="/fuel" className="underline">🔥 fuel</Link>
+                <Link to="/onboarding" className="underline">redo / edit him</Link>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </section>
+
+      <AnimatePresence>
+        {affirm && <AffirmationSheet onClose={() => setAffirm(null)} onDone={() => { const h = affirm; setAffirm(null); void quickTick(h, true) }} />}
+      </AnimatePresence>
     </div>
   )
 }

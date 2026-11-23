@@ -4,6 +4,7 @@ import type { HabitKind, Routine, StandardKind } from '../onboarding/types'
 export type Habit = {
   id: string; standard_id: string | null; name: string; kind: HabitKind; routine: Routine
   level: number; times_per_day: number; days_of_week: number[]; sort_order: number
+  special?: 'affirmation' | null
 }
 export type Standard = { id: string; area: string; statement: string; kind: StandardKind }
 /** habit_id → (YYYY-MM-DD → count) */

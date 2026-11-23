@@ -1,5 +1,26 @@
 # Progress
 
+## Session 2a (23 Nov 2026): Beliefs, morning affirmation + Fuel
+
+Inspired by the video "Have the audacity to be delusional" (notes in `docs/inspiration.md`).
+
+### What got built
+- **Beliefs area in onboarding (🧭):** a new step between Mind and Money. Write beliefs as standards ("believes he's the luckiest man walking", "doesn't talk down on himself").
+- **Identity statement:** in "Visualise him", one present-tense line ("I am…"). It shows big and highlighted at the top of the "This is him" card.
+- **Morning affirmation habit, "Read who I am":** added automatically once you have an identity line or a belief. Tapping it opens a sheet with your identity and beliefs, and **"I read it ✓"** ticks it, so it builds a streak like any other habit.
+- **🔥 Fuel page (`/fuel`):** save a video link, a title and your takeaways (one per line). Reach it from Home → "remember who you're becoming" → 🔥 fuel.
+- **Ticker:** one Fuel takeaway a day now scrolls in the Home alert ticker.
+- **Inspiration log:** `docs/inspiration.md` is the running file of every video you send.
+- DB: `life.vision.identity`, `life.habits.special`, new `life.fuel` table (migration applied).
+
+### Test on the Chromebook
+1. Home → redo / edit him → add an identity line + a belief or two → finish.
+2. Habits → Morning → tap "Read who I am" → read → "I read it ✓".
+3. Home → 🔥 fuel → save this video with a takeaway → check the ticker on Home.
+
+### What's next
+- Re-send the first video so it goes into the inspiration log.
+
 ## Session 1g (18 Nov 2026): Phase 4, the live dashboard home
 
 ### What got built
