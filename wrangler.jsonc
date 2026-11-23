@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers static-assets deploy for the Life Dashboard PWA.
+  "name": "my-life-dashboard",
+  "compatibility_date": "2026-11-23",
+  "assets": {
+    "directory": "./dist",
+    // Unknown paths (/habits, /fuel...) get index.html so React Router handles them.
+    "not_found_handling": "single-page-application"
+  }
+}
