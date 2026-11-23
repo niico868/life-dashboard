@@ -14,6 +14,7 @@ import { NightProvider } from './night/NightProvider'
 import { NightBanner } from './night/NightBanner'
 import { Onboarding } from './pages/Onboarding'
 import { Report } from './pages/Report'
+import { Fuel } from './pages/Fuel'
 import { WorkProvider } from './work/WorkProvider'
 import { FloatingTimer } from './work/FloatingTimer'
 
@@ -38,6 +39,7 @@ function Shell() {
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/work" element={<Work />} />
               <Route path="/report" element={<Report />} />
+              <Route path="/fuel" element={<Fuel />} />
               <Route path="*" element={<Placeholder title="Lost?" note="That page doesn't exist." />} />
             </Routes>
           </motion.div>

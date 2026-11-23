@@ -6,6 +6,7 @@ import { KIND_META, areaOf } from '../onboarding/areas'
 import { HABITS_CHANGED, announceHabitsChanged } from '../night/NightProvider'
 import { nightDate } from '../night/settings'
 import { LevelUpCard } from '../habits/LevelUpCard'
+import { AffirmationSheet } from '../fuel/AffirmationSheet'
 import { readyToLevel } from '../habits/levelling'
 import {
   SCORE_DAYS, dayKey, discipline, isDone, isScheduled, loadHabits, setCount, streak,
@@ -24,6 +25,7 @@ export function Habits() {
   const [logs, setLogs] = useState<LogMap>(new Map())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [affirm, setAffirm] = useState<Habit | null>(null)
 
   const [reload, setReload] = useState(0)
   useEffect(() => {
@@ -44,9 +46,11 @@ export function Habits() {
   const overall = discipline(logs, habits, today)
 
   /** Tap: +1 until full, then a tap clears it (undo). Optimistic, rolls back on error. */
-  async function tap(h: Habit) {
+  async function tap(h: Habit, confirmed = false) {
     const todayKey = dayKey(dateFor(h))
     const cur = logs.get(h.id)?.get(todayKey) ?? 0
+    // The affirmation only ticks after you've read it.
+    if (h.special === 'affirmation' && !confirmed && cur < h.times_per_day) return setAffirm(h)
     const nextCount = cur >= h.times_per_day ? 0 : cur + 1
     const write = (n: number) => setLogs((prev) => {
       const m = new Map(prev)
@@ -132,6 +136,10 @@ export function Habits() {
       })}
 
       {error && <p className="text-sm text-clay">Hmm: {error}</p>}
+
+      <AnimatePresence>
+        {affirm && <AffirmationSheet onClose={() => setAffirm(null)} onDone={() => { const h = affirm; setAffirm(null); void tap(h, true) }} />}
+      </AnimatePresence>
 
       <StandardScores standards={standards} habits={habits} logs={logs} />
     </div>

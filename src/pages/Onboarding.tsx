@@ -87,6 +87,11 @@ export function Onboarding() {
             <Step title="Visualise him" say="Close your eyes for a sec. Picture the man you want to be. What's he like? What does his day look like, morning to night?">
               <textarea rows={6} className={input} value={draft.vision.ideal_self} placeholder="He wakes up at… He's the kind of man who…"
                 onChange={(e) => set((d) => { d.vision.ideal_self = e.target.value; return d })} />
+              <label className="hand mt-4 block text-lg">Now say it as one line, in the present tense. Who are you?
+                <input className={`${input} mt-1 font-[Nunito] text-base`} value={draft.vision.identity} placeholder="I am the luckiest man walking."
+                  onChange={(e) => set((d) => { d.vision.identity = e.target.value; return d })} />
+              </label>
+              <p className="mt-1 text-sm text-ink-soft">You'll read this every morning. Belief sets the direction, your habits do the work.</p>
               <label className="hand mt-4 block text-lg">And why does becoming him matter to you?
                 <textarea rows={3} className={`${input} mt-1 font-[Nunito] text-base`} value={draft.vision.why}
                   onChange={(e) => set((d) => { d.vision.why = e.target.value; return d })} />

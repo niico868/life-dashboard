@@ -4,6 +4,7 @@ export const AREAS = [
   { id: 'body', label: 'Body', emoji: '💪', prompt: 'How does he treat his body?', examples: ['works out twice a day', 'sleeps by 11pm', 'drinks 2L of water a day'] },
   { id: 'food', label: 'Food', emoji: '🥗', prompt: 'What does he eat, and what does he skip?', examples: ["doesn't eat chicken", 'cooks at home most days', 'no fast food on weekdays'] },
   { id: 'mind', label: 'Mind', emoji: '🧠', prompt: 'How does he feed his mind?', examples: ['reads 20 minutes a day', 'meditates every morning', 'journals before bed'] },
+  { id: 'beliefs', label: 'Beliefs', emoji: '🧭', prompt: 'What does he believe about himself and his life?', examples: ['believes he is the luckiest man walking', 'believes everything is working in his favour', "doesn't talk down on himself"] },
   { id: 'money', label: 'Money', emoji: '💰', prompt: 'How does he handle money?', examples: ['logs every expense', 'saves 20% of what comes in', "doesn't impulse buy"] },
   { id: 'home', label: 'Home & organisation', emoji: '🏠', prompt: 'What does his space look like?', examples: ['makes the bed every morning', 'does the dishes before bed', 'keeps the desk clear'] },
   { id: 'vices', label: 'Vices', emoji: '🚬', prompt: 'What does he cut out, or keep in check?', examples: ["doesn't smoke cigarettes", 'weed on occasion', 'drinks only on weekends'] },

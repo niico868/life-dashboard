@@ -22,10 +22,10 @@ Newest at the top. Each entry: link, the core idea, an honest read, and app idea
 - Point 4 overreaches. Blind belief without checks can hurt, especially with money. The honest "Where you are now" step balances it.
 - Ignore the product pitch and keep the idea.
 
-### App ideas (Nico picked B + C + D, beliefs as standards and identity statement)
-- [ ] **Beliefs/identity layer in onboarding:** a "Mind & beliefs" area with belief standards (do: "believes he's lucky"; don't: "talks down on himself"), plus one identity statement shown big on the "This is him" card.
-- [ ] **Daily affirmation habit:** a morning tick-off that shows the identity statement and beliefs.
-- [ ] **Fuel section:** a place in the app to save these videos and their takeaways.
+### App ideas (Nico picked B + C + D, beliefs as standards and identity statement) · built in session 2a
+- [x] **Beliefs/identity layer in onboarding:** a "Mind & beliefs" area with belief standards (do: "believes he's lucky"; don't: "talks down on himself"), plus one identity statement shown big on the "This is him" card.
+- [x] **Daily affirmation habit:** a morning tick-off that shows the identity statement and beliefs.
+- [x] **Fuel section:** a place in the app to save these videos and their takeaways.
 
 ---
 

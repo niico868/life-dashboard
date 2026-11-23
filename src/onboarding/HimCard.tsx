@@ -13,6 +13,11 @@ export function HimCard({ draft }: { draft: Draft }) {
   return (
     <Sketchy fill="#fffaf0" roughness={1.6} seed={42} className="p-5">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">This is him</p>
+      {draft.vision.identity && (
+        <motion.p className="hand mt-2 rounded-xl bg-honey/50 px-3 py-2 text-3xl font-bold leading-tight" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+          {draft.vision.identity}
+        </motion.p>
+      )}
       {draft.vision.ideal_self && (
         <motion.p className="hand mt-2 text-2xl leading-snug" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
           “{draft.vision.ideal_self}”

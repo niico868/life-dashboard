@@ -2,7 +2,7 @@ import { life } from '../lib/supabase'
 import { newKey, type Draft, type HabitDraft, type StandardDraft } from './types'
 import { parseTimesPerDay } from './suggest'
 
-export const emptyDraft = (): Draft => ({ vision: { current_self: '', ideal_self: '', why: '' }, standards: [], habits: [], night: [] })
+export const emptyDraft = (): Draft => ({ vision: { current_self: '', ideal_self: '', why: '', identity: '' }, standards: [], habits: [], night: [] })
 
 /** True once onboarding has been saved at least once. */
 export async function hasVision() {
@@ -18,13 +18,14 @@ export async function loadDraft(): Promise<Draft> {
     life().from('habits').select('*').eq('active', true).order('sort_order'),
   ])
   const d = emptyDraft()
-  if (v.data) d.vision = { id: v.data.id, current_self: v.data.current_self ?? '', ideal_self: v.data.ideal_self ?? '', why: v.data.why ?? '' }
+  if (v.data) d.vision = { id: v.data.id, current_self: v.data.current_self ?? '', ideal_self: v.data.ideal_self ?? '', why: v.data.why ?? '', identity: v.data.identity ?? '' }
   const keyById = new Map<string, string>()
   d.standards = (s.data ?? []).map((r) => {
     const key = newKey(); keyById.set(r.id, key)
     return { key, id: r.id, area: r.area, statement: r.statement, kind: r.kind, target_per_day: r.target_per_day }
   })
   for (const r of h.data ?? []) {
+    if (r.special) continue // app-managed (e.g. the affirmation), not edited in onboarding
     const hd: HabitDraft = { key: newKey(), id: r.id, standardKey: r.standard_id ? keyById.get(r.standard_id) ?? null : null, name: r.name, kind: r.kind, routine: r.routine, times_per_day: r.times_per_day }
     if (r.kind === 'routine_step' && r.routine === 'night') d.night.push(hd)
     else d.habits.push(hd)
@@ -38,7 +39,7 @@ export async function loadDraft(): Promise<Draft> {
  */
 export async function saveDraft(d: Draft) {
   const db = life()
-  const vision = { current_self: d.vision.current_self, ideal_self: d.vision.ideal_self, why: d.vision.why, updated_at: new Date().toISOString() }
+  const vision = { current_self: d.vision.current_self, ideal_self: d.vision.ideal_self, why: d.vision.why, identity: d.vision.identity.trim() || null, updated_at: new Date().toISOString() }
   const vr = d.vision.id
     ? await db.from('vision').update(vision).eq('id', d.vision.id)
     : await db.from('vision').insert(vision)
@@ -69,6 +70,17 @@ export async function saveDraft(d: Draft) {
     keptHabitIds.push(await upsertRow('habits', h, row))
   }
   await deactivateOthers('habits', keptHabitIds)
+  await ensureAffirmation(d)
+}
+
+/** Once there's an identity statement or a belief, add the morning "read who I am" habit (only once). */
+async function ensureAffirmation(d: Draft) {
+  const hasContent = d.vision.identity.trim() || d.standards.some((s) => s.area === 'beliefs' && s.statement.trim())
+  if (!hasContent) return
+  const { count } = await life().from('habits').select('id', { count: 'exact', head: true }).eq('special', 'affirmation').eq('active', true)
+  if (count) return
+  const { error } = await life().from('habits').insert({ name: 'Read who I am', kind: 'habit', routine: 'morning', times_per_day: 1, sort_order: -1, special: 'affirmation', active: true })
+  if (error) throw error
 }
 
 async function upsertRow(table: 'standards' | 'habits', draft: StandardDraft | HabitDraft, row: Record<string, unknown>) {
@@ -84,6 +96,7 @@ async function upsertRow(table: 'standards' | 'habits', draft: StandardDraft | H
 
 async function deactivateOthers(table: 'standards' | 'habits', keep: string[]) {
   let q = life().from(table).update({ active: false }).eq('active', true)
+  if (table === 'habits') q = q.is('special', null)
   if (keep.length) q = q.not('id', 'in', `(${keep.join(',')})`)
   const { error } = await q
   if (error) throw error
