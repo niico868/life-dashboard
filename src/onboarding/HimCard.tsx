@@ -1,9 +1,10 @@
+import { paragraphToFirstPerson, toFirstPerson } from '../lib/voice'
 import { motion } from 'framer-motion'
 import { Sketchy } from '../components/Sketchy'
 import { AREAS, KIND_META, areaOf } from './areas'
 import type { Draft } from './types'
 
-/** "This is him." The vision + standards on one card. */
+/** "This is me." The vision + standards on one card. */
 export function HimCard({ draft }: { draft: Draft }) {
   const byArea = AREAS.map((a) => ({ area: a, items: draft.standards.filter((s) => s.area === a.id && s.statement.trim()) }))
     .filter((g) => g.items.length)
@@ -12,7 +13,7 @@ export function HimCard({ draft }: { draft: Draft }) {
 
   return (
     <Sketchy fill="#fffaf0" roughness={1.6} seed={42} className="p-5">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">This is him</p>
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">This is me</p>
       {draft.vision.identity && (
         <motion.p className="hand mt-2 rounded-xl bg-honey/50 px-3 py-2 text-3xl font-bold leading-tight" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
           {draft.vision.identity}
@@ -20,7 +21,7 @@ export function HimCard({ draft }: { draft: Draft }) {
       )}
       {draft.vision.ideal_self && (
         <motion.p className="hand mt-2 text-2xl leading-snug" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-          “{draft.vision.ideal_self}”
+          “{paragraphToFirstPerson(draft.vision.ideal_self)}”
         </motion.p>
       )}
       {draft.vision.why && <p className="mt-2 text-sm text-ink-soft"><b>Why:</b> {draft.vision.why}</p>}
@@ -35,7 +36,7 @@ export function HimCard({ draft }: { draft: Draft }) {
                   <span className="hand w-4 text-center text-lg font-bold" style={{ color: KIND_META[s.kind].color === '#f2cc8f' ? '#c99a3b' : KIND_META[s.kind].color }}>
                     {KIND_META[s.kind].mark}
                   </span>
-                  <span>{s.statement}</span>
+                  <span>{toFirstPerson(s.statement)}</span>
                 </li>
               ))}
             </ul>

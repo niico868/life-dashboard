@@ -55,7 +55,7 @@ export function Onboarding() {
     catch (e) { setError((e as Error).message); setSaving(false) }
   }
 
-  if (!loaded) return <p className="hand text-2xl">Getting your notebook…</p>
+  if (!loaded) return <p className="hand text-2xl">Getting my notebook…</p>
 
   const progress = (step + (name === 'standards' ? area / AREAS.length : 0)) / (STEPS.length - 1)
 
@@ -71,28 +71,28 @@ export function Onboarding() {
           initial={{ opacity: 0, x: dir * 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * -40 }}
           transition={{ duration: 0.22 }} className="flex-1">
           {name === 'intro' && (
-            <Step title="Let's meet him." say="We're going to sketch out the man you're becoming: who he is, what he does, what he won't do. Then we turn that into a daily plan you can tick off. Takes about 10 minutes. Be honest, nobody sees this but you.">
+            <Step title="Let's meet the man I'm becoming." say="I'm sketching out who I am, what I do and what I won't do. Then I turn it into a daily plan I can tick off. About 10 minutes. Be honest, nobody sees this but me.">
               <div className="text-center text-7xl">✍️</div>
             </Step>
           )}
 
           {name === 'now' && (
-            <Step title="Where you are now" say="First, the honest snapshot. How are things right now? Habits, energy, money, what's working, what's not. No judgement.">
+            <Step title="Where I am now" say="First, the honest snapshot. How are things for me right now? Habits, energy, money, what's working, what's not. No judgement.">
               <textarea rows={7} className={input} value={draft.vision.current_self} placeholder="Right now I…"
                 onChange={(e) => set((d) => { d.vision.current_self = e.target.value; return d })} />
             </Step>
           )}
 
           {name === 'vision' && (
-            <Step title="Visualise him" say="Close your eyes for a sec. Picture the man you want to be. What's he like? What does his day look like, morning to night?">
-              <textarea rows={6} className={input} value={draft.vision.ideal_self} placeholder="He wakes up at… He's the kind of man who…"
+            <Step title="Visualise me" say="Close your eyes for a sec. Picture the man I'm becoming. Write it as if I already am him: what am I like? What does my day look like, morning to night?">
+              <textarea rows={6} className={input} value={draft.vision.ideal_self} placeholder="I wake up at… I'm the kind of man who…"
                 onChange={(e) => set((d) => { d.vision.ideal_self = e.target.value; return d })} />
-              <label className="hand mt-4 block text-lg">Now say it as one line, in the present tense. Who are you?
+              <label className="hand mt-4 block text-lg">Now say it as one line, in the present tense. Who am I?
                 <input className={`${input} mt-1 font-[Nunito] text-base`} value={draft.vision.identity} placeholder="I am the luckiest man walking."
                   onChange={(e) => set((d) => { d.vision.identity = e.target.value; return d })} />
               </label>
-              <p className="mt-1 text-sm text-ink-soft">You'll read this every morning. Belief sets the direction, your habits do the work.</p>
-              <label className="hand mt-4 block text-lg">And why does becoming him matter to you?
+              <p className="mt-1 text-sm text-ink-soft">I read this every morning. Belief sets the direction, my habits do the work.</p>
+              <label className="hand mt-4 block text-lg">Why does this matter to me?
                 <textarea rows={3} className={`${input} mt-1 font-[Nunito] text-base`} value={draft.vision.why}
                   onChange={(e) => set((d) => { d.vision.why = e.target.value; return d })} />
               </label>
@@ -104,7 +104,7 @@ export function Onboarding() {
           {name === 'night' && <NightStep draft={draft} set={set} />}
 
           {name === 'summary' && (
-            <Step title="This is him." say="Read it out loud. This is who you're building, one tick at a time.">
+            <Step title="This is me." say="Read it out loud. This is who I'm building, one tick at a time.">
               <HimCard draft={draft} />
             </Step>
           )}
@@ -165,7 +165,7 @@ function StandardsStep({ draft, set, areaIndex, onJump }: { draft: Draft; set: S
         })}
       </div>
 
-      <Step title={`${a.emoji} ${a.label}`} say={`${a.prompt} Write it the way you'd describe him. Each line is a do, a don't, or a limit. Tap the tag to switch.`}>
+      <Step title={`${a.emoji} ${a.label}`} say={`${a.prompt} Start each line with I. Each line is a do, a don't, or a limit. Tap the tag to switch.`}>
         <ul className="flex flex-col gap-2">
           <AnimatePresence initial={false}>
             {items.map((s) => (
@@ -184,7 +184,7 @@ function StandardsStep({ draft, set, areaIndex, onJump }: { draft: Draft; set: S
           </AnimatePresence>
         </ul>
         <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); add(text) }}>
-          <input className={`${input} py-2`} value={text} onChange={(e) => setText(e.target.value)} placeholder="He…" />
+          <input className={`${input} py-2`} value={text} onChange={(e) => setText(e.target.value)} placeholder="I…" />
           <button className={`${pill} bg-honey text-lg`}>add</button>
         </form>
         <div className="flex flex-wrap gap-2">
@@ -232,7 +232,7 @@ function ActionsStep({ draft, set }: { draft: Draft; set: SetDraft }) {
   const loose = draft.habits.filter((h) => !h.standardKey || !draft.standards.some((s) => s.key === h.standardKey))
 
   return (
-    <Step title="Turn it into action" say="Standards are who he is. Habits and chores are what he does today. I've suggested some, so rename, retune or delete anything that doesn't fit.">
+    <Step title="Turn it into action" say="Standards are who I am. Habits and chores are what I do today. Here are some suggestions: rename, retune or delete anything that doesn't fit.">
       {draft.standards.length === 0 && <p className="text-ink-soft">No standards yet. Go back, or add habits directly below.</p>}
       {draft.standards.map((s) => {
         const hs = draft.habits.filter((h) => h.standardKey === s.key)
@@ -268,7 +268,7 @@ function NightStep({ draft, set }: { draft: Draft; set: SetDraft }) {
   })
 
   return (
-    <Step title="🌙 The non-negotiables" say="Your “I can't sleep until this is done” list. Put them in the order you'll do them. Later, the app will nag you until every one is ticked.">
+    <Step title="🌙 The non-negotiables" say="My “I can't sleep until this is done” list, in the order I do them. The app nags me until every one is ticked.">
       <ol className="flex flex-col gap-2">
         <AnimatePresence initial={false}>
           {draft.night.map((n, i) => (

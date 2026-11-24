@@ -1,16 +1,17 @@
 import type { StandardKind } from './types'
+import { stripSubject } from '../lib/voice'
 
 export const AREAS = [
-  { id: 'body', label: 'Body', emoji: '💪', prompt: 'How does he treat his body?', examples: ['works out twice a day', 'sleeps by 11pm', 'drinks 2L of water a day'] },
-  { id: 'food', label: 'Food', emoji: '🥗', prompt: 'What does he eat, and what does he skip?', examples: ["doesn't eat chicken", 'cooks at home most days', 'no fast food on weekdays'] },
-  { id: 'mind', label: 'Mind', emoji: '🧠', prompt: 'How does he feed his mind?', examples: ['reads 20 minutes a day', 'meditates every morning', 'journals before bed'] },
-  { id: 'beliefs', label: 'Beliefs', emoji: '🧭', prompt: 'What does he believe about himself and his life?', examples: ['believes he is the luckiest man walking', 'believes everything is working in his favour', "doesn't talk down on himself"] },
-  { id: 'money', label: 'Money', emoji: '💰', prompt: 'How does he handle money?', examples: ['logs every expense', 'saves 20% of what comes in', "doesn't impulse buy"] },
-  { id: 'home', label: 'Home & organisation', emoji: '🏠', prompt: 'What does his space look like?', examples: ['makes the bed every morning', 'does the dishes before bed', 'keeps the desk clear'] },
-  { id: 'vices', label: 'Vices', emoji: '🚬', prompt: 'What does he cut out, or keep in check?', examples: ["doesn't smoke cigarettes", 'weed on occasion', 'drinks only on weekends'] },
-  { id: 'style', label: 'Style', emoji: '👔', prompt: 'How does he show up looking?', examples: ["lays out tomorrow's outfit", 'keeps his shoes clean', 'gets a trim every 2 weeks'] },
-  { id: 'work', label: 'Work', emoji: '💻', prompt: 'How does he work?', examples: ['codes 2 hours a day', 'answers clients within a day', 'plans tomorrow tonight'] },
-  { id: 'relationships', label: 'Relationships', emoji: '❤️', prompt: 'How does he treat his people?', examples: ['calls family every week', 'no phone at the dinner table', 'shows up when he says he will'] },
+  { id: 'body', label: 'Body', emoji: '💪', prompt: 'How do I treat my body?', examples: ['I work out twice a day', 'I sleep by 11pm', 'I drink 2L of water a day'] },
+  { id: 'food', label: 'Food', emoji: '🥗', prompt: 'What do I eat, and what do I skip?', examples: ["I don't eat chicken", 'I cook at home most days', 'No fast food on weekdays'] },
+  { id: 'mind', label: 'Mind', emoji: '🧠', prompt: 'How do I feed my mind?', examples: ['I read 20 minutes a day', 'I meditate every morning', 'I journal before bed'] },
+  { id: 'beliefs', label: 'Beliefs', emoji: '🧭', prompt: 'What do I believe about myself and my life?', examples: ['I am the luckiest man walking', 'Everything is working in my favour', "I don't talk down on myself"] },
+  { id: 'money', label: 'Money', emoji: '💰', prompt: 'How do I handle money?', examples: ['I log every expense', 'I save 20% of what comes in', "I don't impulse buy"] },
+  { id: 'home', label: 'Home & organisation', emoji: '🏠', prompt: 'What does my space look like?', examples: ['I make the bed every morning', 'I do the dishes before bed', 'I keep the desk clear'] },
+  { id: 'vices', label: 'Vices', emoji: '🚬', prompt: 'What do I cut out, or keep in check?', examples: ["I don't smoke cigarettes", 'Weed on occasion', 'I drink only on weekends'] },
+  { id: 'style', label: 'Style', emoji: '👔', prompt: 'How do I show up looking?', examples: ["I lay out tomorrow's outfit", 'I keep my shoes clean', 'I get a trim every 2 weeks'] },
+  { id: 'work', label: 'Work', emoji: '💻', prompt: 'How do I work?', examples: ['I code 2 hours a day', 'I answer clients within a day', 'I plan tomorrow tonight'] },
+  { id: 'relationships', label: 'Relationships', emoji: '❤️', prompt: 'How do I treat my people?', examples: ['I call family every week', 'No phone at the dinner table', 'I show up when I say I will'] },
 ] as const
 
 export type AreaId = (typeof AREAS)[number]['id']
@@ -23,8 +24,8 @@ export const NIGHT_PRESETS = [
 
 /** Guess do / don't / limit from how a standard is written. */
 export function guessKind(text: string): StandardKind {
-  const t = text.toLowerCase().trim()
-  if (/^(doesn'?t|does not|don'?t|do not|never|no |not |avoids|quits?)/.test(t)) return 'dont'
+  const t = stripSubject(text).toLowerCase()
+  if (/^(doesn'?t|does not|don'?t|do not|never|no |not |avoids?|quits?)/.test(t)) return 'dont'
   if (/(on occasion|occasionally|only on|only |at most|max|limit|no more than|sometimes|in moderation)/.test(t)) return 'limit'
   return 'do'
 }

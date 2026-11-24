@@ -11,6 +11,7 @@ import { nightDate, reminderAt } from '../night/settings'
 import { useWork } from '../work/WorkProvider'
 import { useWorkToday } from '../work/useWorkToday'
 import { KINDS, dueAt, loadEvents, type EventWithPrep } from '../calendar/data'
+import { toFirstPerson } from '../lib/voice'
 import { AffirmationSheet } from '../fuel/AffirmationSheet'
 import { loadFuel, takeawayOfDay } from '../fuel/data'
 import { fmtClock, fmtDuration, fmtTime } from '../lib/time'
@@ -114,7 +115,7 @@ export function Home() {
         <motion.div initial={{ rotate: -2, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }}>
           <Sketchy fill="#fffaf0" roughness={2} className="p-5">
             <p className="hand text-2xl">First things first.</p>
-            <p className="mt-1 text-ink-soft">Let's sketch out the man you're becoming. Everything else in here is built from it.</p>
+            <p className="mt-1 text-ink-soft">Let me sketch out the man I'm becoming. Everything else in here is built from it.</p>
             <Link to="/onboarding" className="hand mt-4 inline-block rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 border-ink bg-honey px-5 py-2 text-xl">
               Start onboarding →
             </Link>
@@ -191,15 +192,16 @@ export function Home() {
 
       <section>
         <button className="hand text-xl underline decoration-wavy" onClick={() => setShowHim((v) => !v)}>
-          {showHim ? 'hide him ▴' : 'remember who you’re becoming ▾'}
+          {showHim ? 'hide ▴' : 'remember who I’m becoming ▾'}
         </button>
+        {!showHim && <Affirmations draft={draft} day={now} />}
         <AnimatePresence>
           {showHim && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
               <div className="pt-3"><HimCard draft={draft} /></div>
               <div className="mt-2 flex justify-center gap-4 text-sm">
                 <Link to="/fuel" className="underline">🔥 fuel</Link>
-                <Link to="/onboarding" className="underline">redo / edit him</Link>
+                <Link to="/onboarding" className="underline">redo / edit me</Link>
               </div>
             </motion.div>
           )}
@@ -220,6 +222,22 @@ function relTime(d: Date, now: Date) {
   if (mins < 24 * 60) return `in ${Math.floor(mins / 60)}h ${mins % 60}m`
   const days = Math.round(mins / (24 * 60))
   return days === 1 ? 'tomorrow' : `in ${days} days`
+}
+
+/** Collapsed "who I'm becoming": the identity line plus 3 of my standards, read as affirmations. Rotates daily. */
+function Affirmations({ draft, day }: { draft: Draft; day: Date }) {
+  const lines = draft.standards.map((s) => s.statement).filter((s) => s.trim())
+  const start = lines.length ? Math.floor(day.getTime() / 86_400_000) % lines.length : 0
+  const pick = [...lines.slice(start), ...lines.slice(0, start)].slice(0, 3)
+  if (!draft.vision.identity && !pick.length) return null
+  return (
+    <motion.ul className="hand mt-2 flex flex-col gap-0.5 text-xl leading-snug" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      {draft.vision.identity && <li className="text-2xl font-bold">{toFirstPerson(draft.vision.identity)}</li>}
+      {pick.map((l, i) => (
+        <motion.li key={l} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 + i * 0.15 }}>{toFirstPerson(l).replace(/\.$/, "")}.</motion.li>
+      ))}
+    </motion.ul>
+  )
 }
 
 /** Scrolling strip of alerts and reminders. Pauses on hover; static if reduced motion is on. */
