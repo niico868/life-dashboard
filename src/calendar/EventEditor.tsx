@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Overlay } from '../components/Overlay'
 import { Sketchy } from '../components/Sketchy'
 import { SketchButton } from '../components/SketchButton'
 import {
@@ -56,14 +57,10 @@ export function EventEditor({ event, day, onClose }: Props) {
   const field = 'w-full rounded-xl border-2 border-ink/40 bg-white px-3 py-2 outline-none focus:border-clay'
 
   return (
-    <motion.div className="fixed inset-0 z-40 flex items-end bg-ink/30" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={(e) => e.target === e.currentTarget && onClose(false)}>
-      <motion.div className="mx-auto max-h-[92dvh] w-full max-w-md overflow-y-auto px-3 pb-6" initial={{ y: 400 }} animate={{ y: 0 }} exit={{ y: 400 }}
-        transition={{ type: 'spring', damping: 24 }}>
+    <Overlay onClose={() => onClose(false)}>
         <Sketchy fill="#fbf6ec" roughness={1.6} className="p-5">
           <div className="flex items-center justify-between">
             <h2 className="text-3xl font-bold">{event ? 'Edit event' : 'New event'}</h2>
-            <button aria-label="Close" className="text-2xl" onClick={() => onClose(false)}>✕</button>
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
@@ -125,7 +122,6 @@ export function EventEditor({ event, day, onClose }: Props) {
             </div>
           </div>
         </Sketchy>
-      </motion.div>
-    </motion.div>
+    </Overlay>
   )
 }

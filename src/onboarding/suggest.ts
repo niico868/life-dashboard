@@ -1,3 +1,4 @@
+import { stripSubject } from '../lib/voice'
 import { newKey, type HabitDraft, type HabitKind, type Routine, type StandardDraft } from './types'
 
 /** Pull a per-day count out of text: "twice a day" → 2, "3 times" → 3. */
@@ -52,7 +53,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
 
 /** Turn one standard into suggested habits/chores. Always editable after. */
 export function suggestHabits(s: StandardDraft): HabitDraft[] {
-  const text = s.statement.toLowerCase().trim()
+  const text = stripSubject(s.statement).toLowerCase()
   if (!text) return []
   // Beliefs are covered by the morning affirmation, not separate habits.
   if (s.area === 'beliefs') return []
@@ -75,7 +76,7 @@ export function suggestHabits(s: StandardDraft): HabitDraft[] {
   const times = parseTimesPerDay(text) ?? rule?.times ?? s.target_per_day ?? 1
   return [{
     ...base,
-    name: rule?.name ?? cap(text.replace(/^he\s+/, '')),
+    name: rule?.name ?? cap(text),
     kind: rule?.kind ?? (CHORE_AREAS.has(s.area) ? 'chore' : 'habit'),
     routine: rule?.routine ?? 'anytime',
     times_per_day: times,

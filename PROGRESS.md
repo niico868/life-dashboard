@@ -1,5 +1,21 @@
 # Progress
 
+## Session 2b (24 Nov 2026): Deploy fixes, pop-ups, "I" voice, dash.neikoli.com
+
+### What got built
+- **Live on Cloudflare Workers** (Worker `my-life-dashboard`). Fixed the deploy: `public/_redirects` was replaced with `wrangler.jsonc` (SPA mode).
+- **Pop-ups close properly:** tap outside, tap ✕ or press Esc (shared `src/components/Overlay.tsx`).
+- **Everything speaks as "I":** `src/lib/voice.ts` turns "works out" / "he works out" into "I work out" on display, so old standards read right too. Onboarding, prompts and examples rewritten.
+- **Home:** "remember who I'm becoming", when collapsed, shows my identity line plus 3 standards (rotating daily) as affirmations.
+
+### Nico to-do: move to dash.neikoli.com
+1. Cloudflare → Workers & Pages → **my-life-dashboard** → Settings → **Domains & Routes** → Add → **Custom domain** → `dash.neikoli.com`. (neikoli.com must be on this Cloudflare account.)
+2. Supabase [URL settings](https://supabase.com/dashboard/project/kbghhdudnnyawbxfgdgi/auth/url-configuration): Site URL `https://dash.neikoli.com`, Redirect URL `https://dash.neikoli.com/**` (keep the workers.dev one too).
+
+### Test
+- Open the event editor and tap the dark area: it should close.
+- Home: the collapsed affirmations read as "I…".
+
 ## Session 2a (23 Nov 2026): Beliefs, morning affirmation + Fuel
 
 Inspired by the video "Have the audacity to be delusional" (notes in `docs/inspiration.md`).

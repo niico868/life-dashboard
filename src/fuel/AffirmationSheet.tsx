@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { toFirstPerson } from '../lib/voice'
+import { Overlay } from '../components/Overlay'
 import { Sketchy } from '../components/Sketchy'
 import { life } from '../lib/supabase'
 import { KIND_META } from '../onboarding/areas'
@@ -7,7 +9,7 @@ import type { StandardKind } from '../onboarding/types'
 
 type Belief = { id: string; statement: string; kind: StandardKind }
 
-/** Morning affirmation: show who he is, then "I read it" ticks the habit. */
+/** Morning affirmation: show who I am, then "I read it" ticks the habit. */
 export function AffirmationSheet({ onDone, onClose }: { onDone: () => void; onClose: () => void }) {
   const [identity, setIdentity] = useState<string | null>(null)
   const [beliefs, setBeliefs] = useState<Belief[]>([])
@@ -23,10 +25,7 @@ export function AffirmationSheet({ onDone, onClose }: { onDone: () => void; onCl
   }, [])
 
   return (
-    <motion.div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 p-4 sm:items-center"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-      <motion.div className="w-full max-w-md" initial={{ y: 60, rotate: 2 }} animate={{ y: 0, rotate: -0.5 }} exit={{ y: 60 }}
-        transition={{ type: 'spring', damping: 16 }} onClick={(e) => e.stopPropagation()}>
+    <Overlay onClose={onClose} z="z-50">
         <Sketchy fill="#fffaf0" roughness={1.8} seed={7} className="p-6">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink-soft">Read it like you mean it</p>
           {identity === null ? <p className="hand mt-3 text-2xl">…</p> : (
@@ -39,7 +38,7 @@ export function AffirmationSheet({ onDone, onClose }: { onDone: () => void; onCl
                   {beliefs.map((b, i) => (
                     <motion.li key={b.id} className="flex items-baseline gap-2 text-lg" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.25 }}>
                       <span className="hand font-bold" style={{ color: KIND_META[b.kind].color }}>{KIND_META[b.kind].mark}</span>
-                      <span>I {b.statement.replace(/^(he )/i, '')}</span>
+                      <span>{toFirstPerson(b.statement)}</span>
                     </motion.li>
                   ))}
                 </ul>
@@ -54,7 +53,6 @@ export function AffirmationSheet({ onDone, onClose }: { onDone: () => void; onCl
             </button>
           </div>
         </Sketchy>
-      </motion.div>
-    </motion.div>
+    </Overlay>
   )
 }

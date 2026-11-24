@@ -64,13 +64,13 @@ export function Habits() {
     try { await setCount(h.id, todayKey, nextCount); announceHabitsChanged() } catch (e) { write(cur); setError((e as Error).message) }
   }
 
-  if (loading) return <p className="hand text-2xl">Loading your day…</p>
+  if (loading) return <p className="hand text-2xl">Loading my day…</p>
 
   if (!habits.length) {
     return (
       <Sketchy fill="#fffaf0" className="p-5">
         <p className="hand text-2xl">No habits yet.</p>
-        <p className="mt-1 text-ink-soft">Run onboarding to build them from your standards.</p>
+        <p className="mt-1 text-ink-soft">Run onboarding to build them from my standards.</p>
         <Link to="/onboarding" className="hand mt-3 inline-block text-xl underline decoration-wavy">Start onboarding →</Link>
       </Sketchy>
     )
@@ -104,7 +104,7 @@ export function Habits() {
           <motion.div initial={{ scale: 0.6, rotate: -6, opacity: 0 }} animate={{ scale: 1, rotate: -1.5, opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ type: 'spring', damping: 12 }}>
             <Sketchy fill="#f2cc8f" roughness={2.2} className="p-4 text-center">
-              <p className="hand text-2xl font-bold">Every box ticked. That's him. 🏆</p>
+              <p className="hand text-2xl font-bold">Every box ticked. That's me. 🏆</p>
             </Sketchy>
           </motion.div>
         )}

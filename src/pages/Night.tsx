@@ -89,7 +89,8 @@ export function Night() {
         <AnimatePresence>
           {showSettings && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-              <div className="mt-3 flex flex-col gap-3 rounded-2xl border-2 border-dashed border-[#f6efe1]/30 p-4">
+              <div className="relative mt-3 flex flex-col gap-3 rounded-2xl border-2 border-dashed border-[#f6efe1]/30 p-4 pt-8">
+                <button aria-label="Close" className="absolute right-3 top-1 text-xl text-[#f6efe1]/70" onClick={() => setShowSettings(false)}>✕</button>
                 <label className="flex items-center justify-between gap-3">
                   <span>Remind me</span>
                   <input type="checkbox" className="h-5 w-5 accent-[#f2cc8f]" checked={settings.night_reminder_on}

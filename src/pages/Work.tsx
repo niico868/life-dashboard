@@ -1,3 +1,4 @@
+import { Overlay } from '../components/Overlay'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { fmtClock, fmtDuration, fmtTime } from '../lib/time'
@@ -46,10 +47,9 @@ export function Work() {
       {/* In-app check-in (when the floating window isn't showing it) */}
       <AnimatePresence>
         {w.checkinOpen && !w.pipWindow && w.session && (
-          <motion.div className="fixed inset-0 z-30 flex items-center bg-paper/60 px-5 backdrop-blur-[2px]"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="w-full"><CheckIn onSubmit={w.submitCheckin} onLater={w.closeCheckin} /></div>
-          </motion.div>
+          <Overlay onClose={w.closeCheckin} position="center">
+            <CheckIn onSubmit={w.submitCheckin} onLater={w.closeCheckin} />
+          </Overlay>
         )}
       </AnimatePresence>
 
@@ -187,9 +187,7 @@ function EndSheet({ onCancel, onFinish }: { onCancel: () => void; onFinish: (sum
   const [busy, setBusy] = useState(false)
   const distractions = notes.filter((n) => n.kind === 'distraction')
   return (
-    <motion.div className="fixed inset-0 z-30 flex items-end bg-ink/30" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <motion.div className="mx-auto w-full max-w-md px-3 pb-24" initial={{ y: 300 }} animate={{ y: 0 }} exit={{ y: 300 }}
-        transition={{ type: 'spring', damping: 22 }}>
+    <Overlay onClose={onCancel}>
         <Sketchy fill="#fbf6ec" roughness={1.8} className="p-5">
           <h2 className="text-3xl font-bold">Wrap it up</h2>
           <p className="mt-1">You put in <b>{fmtClock(elapsed)}</b> with {notes.filter((n) => n.kind === 'working_on').length} check-ins
@@ -205,8 +203,7 @@ function EndSheet({ onCancel, onFinish }: { onCancel: () => void; onFinish: (sum
             </SketchButton>
           </div>
         </Sketchy>
-      </motion.div>
-    </motion.div>
+    </Overlay>
   )
 }
 
